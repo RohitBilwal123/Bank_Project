@@ -349,3 +349,16 @@ Bank_Project/README.md
 ````
 
 Then we'll add **pytest + Jenkins testing**, and after that create the real `Jenkinsfile`.
+## 📸 Jenkins Proof
+
+### Jenkins Dashboard
+
+![Jenkins Dashboard](screenshots/jenkins-dashboard.png)
+
+### Jenkins Build Success
+
+![Jenkins Build Success](screenshots/jenkins-build-success.png)
+
+### Jenkins Console Output
+
+![Jenkins Console Output](screenshots/jenkins-console-output.png)
