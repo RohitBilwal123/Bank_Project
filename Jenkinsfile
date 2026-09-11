@@ -32,9 +32,9 @@ pipeline {
         }
 
         stage('Verify') {
-            steps {
-                echo 'Checking Docker container...'
-                bat 'docker ps'
+           steps {
+             echo 'Checking Docker container...'
+             bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" ps'
             }
         }
     }
