@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🏦 Bank Management System</h1>
+
+    <!-- MAIN MENU -->
+    <div id="mainMenu">
+        <button onclick="showCreate()">1. Create Account</button>
+        <button onclick="showLogin()">2. Login</button>
+        <button onclick="exitApp()">3. Exit</button>
+    </div>
+
+
+    <!-- CREATE ACCOUNT -->
+    <div id="createSection" style="display:none;">
+
+        <h2>Create Account</h2>
+
+        <input type="text" id="name" placeholder="Enter your name">
+
+        <select id="accountType">
+            <option value="savings">Savings Account</option>
+            <option value="current">Current Account</option>
+        </select>
+
+        <input type="number" id="initialBalance"
+               placeholder="Enter initial balance">
+
+        <button onclick="createAccount()">Create Account</button>
+
+        <p id="createResult"></p>
+
+        <button onclick="goHome()">Back</button>
+
+    </div>
+
+
+    <!-- LOGIN -->
+    <div id="loginSection" style="display:none;">
+
+        <h2>Login</h2>
+
+        <input type="number" id="accountNumber"
+               placeholder="Enter account number">
+
+        <button onclick="login()">Login</button>
+
+        <p id="loginResult"></p>
+
+        <button onclick="goHome()">Back</button>
+
+    </div>
+
+
+    <!-- ACCOUNT MENU -->
+    <div id="accountSection" style="display:none;">
+
+        <h2 id="welcome"></h2>
+
+        <p>
+            Account Number:
+            <strong id="loggedAccount"></strong>
+        </p>
+
+        <p>
+            Balance:
+            ₹<strong id="currentBalance">0</strong>
+        </p>
+
+        <hr>
+
+        <button onclick="showDeposit()">1. Deposit</button>
+        <button onclick="showWithdraw()">2. Withdraw</button>
+        <button onclick="checkBalance()">3. Check Balance</button>
+        <button onclick="calculateInterest()">4. Calculate Interest</button>
+        <button onclick="logout()">5. Logout</button>
+
+
+        <!-- DEPOSIT -->
+        <div id="depositSection" style="display:none;">
+
+            <h3>Deposit Money</h3>
+
+            <input type="number"
+                   id="depositAmount"
+                   placeholder="Enter amount">
+
+            <button onclick="depositMoney()">Deposit</button>
+
+            <p id="depositResult"></p>
+
+        </div>
+
+
+        <!-- WITHDRAW -->
+        <div id="withdrawSection" style="display:none;">
+
+            <h3>Withdraw Money</h3>
+
+            <input type="number"
+                   id="withdrawAmount"
+                   placeholder="Enter amount">
+
+            <button onclick="withdrawMoney()">Withdraw</button>
+
+            <p id="withdrawResult"></p>
+
+        </div>
+
+
+        <p id="operationResult"></p>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

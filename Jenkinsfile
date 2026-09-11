@@ -5,26 +5,47 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                checkout scm
+                echo 'Checking out source code...'
             }
         }
 
-        stage('Python Version') {
+        stage('Test') {
             steps {
-                bat '"C:\\Users\\rohit\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe" --version'
+                echo 'Running Python tests...'
+                bat 'python -m pytest'
             }
         }
 
-        stage('Compile') {
+        stage('Docker Build') {
             steps {
-                bat '"C:\\Users\\rohit\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe" -m py_compile main.py banking\\account.py banking\\transactions.py'
+                echo 'Building Docker image...'
+                bat 'docker build -t bank-project .'
             }
         }
 
-        stage('Build Success') {
+        stage('Docker Deploy') {
             steps {
-                echo 'Python Bank Project compilation successful!'
+                echo 'Deploying application...'
+                bat 'docker rm -f bank-app 2>nul'
+                bat 'docker run -d -p 5000:5000 --name bank-app bank-project'
             }
+        }
+
+        stage('Verify') {
+            steps {
+                echo 'Checking Docker container...'
+                bat 'docker ps'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI/CD Pipeline completed successfully!'
+        }
+
+        failure {
+            echo 'CI/CD Pipeline failed!'
         }
     }
 }
