@@ -18,16 +18,16 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                echo 'Building Docker image...'
-                bat 'docker build -t bank-project .'
+              echo 'Building Docker image...'
+              bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" build -t bank-project .'
             }
         }
 
         stage('Docker Deploy') {
-            steps {
-                echo 'Deploying application...'
-                bat 'docker rm -f bank-app 2>nul'
-                bat 'docker run -d -p 5000:5000 --name bank-app bank-project'
+           steps {
+             echo 'Deploying application...'
+             bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" rm -f bank-app 2>nul'
+             bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" run -d -p 5000:5000 --name bank-app bank-project'
             }
         }
 
