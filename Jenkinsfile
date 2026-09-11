@@ -12,7 +12,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running Python tests...'
-                bat 'python -m pytest'
+                bat '"C:\\Users\\rohit\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe" -m pytest'
             }
         }
 
