@@ -10,11 +10,18 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                echo 'Running Python tests...'
-                bat '"C:\\Users\\rohit\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe" -m pytest'
-            }
+    steps {
+        echo 'Running Python tests...'
+
+        bat '"C:\\Users\\rohit\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe" -m pytest --junitxml=test-results.xml'
+    }
+
+    post {
+        always {
+            junit 'test-results.xml'
         }
+    }
+}
 
         stage('Docker Build') {
             steps {
