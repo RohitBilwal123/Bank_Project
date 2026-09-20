@@ -9,11 +9,13 @@ pipeline {
             }
         }
 
-        stage('Test') {
+       stage('Test') {
     steps {
         echo 'Running Python tests...'
 
         bat '"C:\\Users\\rohit\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe" -m pytest --junitxml=test-results.xml'
+
+        bat 'dir'
     }
 
     post {
