@@ -38,6 +38,14 @@ pipeline {
                 bat 'docker build -t bank-project .'
             }
         }
+        stage('Docker Diagnostics') {
+            steps {
+                bat 'whoami'
+                bat 'where docker'
+                bat 'docker context show'
+                bat 'docker info'
+            }
+        }
 
         stage('Docker Deploy') {
             steps {
