@@ -10,25 +10,27 @@ pipeline {
             }
         }
 
+       
         stage('Test') {
             steps {
                 echo 'Checking Python installation...'
-                bat 'where python'
-                bat 'python --version'
+
+                bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" --version'
 
                 echo 'Installing test dependencies...'
-                bat 'python -m pip install pytest'
+                bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pip install pytest'
 
                 echo 'Running Python tests...'
-                bat 'python -m pytest --junitxml=test-results.xml'
+                bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pytest --junitxml=test-results.xml'
             }
             post {
                 always {
                     junit allowEmptyResults: true,
-                          testResults: 'test-results.xml'
+                        testResults: 'test-results.xml'
                 }
             }
         }
+
 
         stage('Docker Build') {
             steps {
