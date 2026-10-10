@@ -1,49 +1,56 @@
+
 pipeline {
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
+                checkout scm
             }
         }
 
-       stage('Test') {
-    steps {
-        echo 'Running Python tests...'
+        stage('Test') {
+            steps {
+                echo 'Checking Python installation...'
+                bat 'where python'
+                bat 'python --version'
 
-        bat '"C:\\Users\\rohit\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe" -m pytest --junitxml=test-results.xml'
+                echo 'Installing test dependencies...'
+                bat 'python -m pip install pytest'
 
-        bat 'dir'
-    }
-
-    post {
-        always {
-            junit 'test-results.xml'
+                echo 'Running Python tests...'
+                bat 'python -m pytest --junitxml=test-results.xml'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true,
+                          testResults: 'test-results.xml'
+                }
+            }
         }
-    }
-}
 
         stage('Docker Build') {
             steps {
-              echo 'Building Docker image...'
-              bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" build -t bank-project .'
+                echo 'Building Docker image...'
+                bat 'docker build -t bank-project .'
             }
         }
 
         stage('Docker Deploy') {
-           steps {
-             echo 'Deploying application...'
-             bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" rm -f bank-app 2>nul'
-             bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" run -d -p 5000:5000 --name bank-app bank-project'
+            steps {
+                echo 'Removing old container if present...'
+                bat 'docker rm -f bank-app 2>nul || exit /b 0'
+
+                echo 'Starting application container...'
+                bat 'docker run -d -p 5000:5000 --name bank-app bank-project'
             }
         }
 
         stage('Verify') {
-           steps {
-             echo 'Checking Docker container...'
-             bat '"C:\\Users\\rohit\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" ps'
+            steps {
+                echo 'Checking Docker container...'
+                bat 'docker ps --filter "name=bank-app"'
             }
         }
     }
@@ -52,7 +59,6 @@ pipeline {
         success {
             echo 'CI/CD Pipeline completed successfully!'
         }
-
         failure {
             echo 'CI/CD Pipeline failed!'
         }

@@ -138,6 +138,22 @@ def interest(account_number):
     }), 400
 
 
+# APPLICATION VERSION
+@app.route("/version")
+
+def version():
+    return jsonify({
+        "application": "Bank Management System",
+        "version": "2.0",
+        "deployment": "Kubernetes"
+    })
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "UP"
+    }), 200
+
+
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
