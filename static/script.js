@@ -1,229 +1,321 @@
-let loggedAccount = null;
 
+const API = "/api";
 
-// Show Create Account
+let loggedInAccount = null;
+
+const mainSections = [
+    "mainMenu",
+    "createSection",
+    "loginSection",
+    "accountSection"
+];
+
+function showSection(sectionId) {
+    mainSections.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.style.display = id === sectionId ? "block" : "none";
+        }
+    });
+
+    hideOperations();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function hideOperations() {
+    ["depositSection", "withdrawSection"].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.style.display = "none";
+    });
+}
+
+function setMessage(id, message, success = false) {
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    element.textContent = message;
+    element.style.color = success ? "#16864b" : "#c62828";
+}
+
+function clearMessages() {
+    [
+        "createResult",
+        "loginResult",
+        "depositResult",
+        "withdrawResult",
+        "operationResult"
+    ].forEach(id => setMessage(id, ""));
+}
+
 function showCreate() {
-    document.getElementById("mainMenu").style.display = "none";
-    document.getElementById("createSection").style.display = "block";
+    clearMessages();
+    showSection("createSection");
 }
 
-
-// Show Login
 function showLogin() {
-    document.getElementById("mainMenu").style.display = "none";
-    document.getElementById("loginSection").style.display = "block";
+    clearMessages();
+    showSection("loginSection");
 }
 
-
-// Go Home
 function goHome() {
-    document.getElementById("createSection").style.display = "none";
-    document.getElementById("loginSection").style.display = "none";
-    document.getElementById("accountSection").style.display = "none";
-    document.getElementById("mainMenu").style.display = "block";
+    clearMessages();
+    showSection("mainMenu");
 }
 
-
-// Create Account
-async function createAccount() {
-
-    const name = document.getElementById("name").value;
-    const accountType = document.getElementById("accountType").value;
-    const balance = document.getElementById("initialBalance").value;
-
-    const response = await fetch("/create-account", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            name: name,
-            account_type: accountType,
-            balance: balance
-        })
-    });
-
-    const data = await response.json();
-
-    document.getElementById("createResult").innerText =
-        data.message || data.error;
-
-    if (data.account_number) {
-        document.getElementById("createResult").innerText =
-            `Account created successfully! Your account number is ${data.account_number}`;
-    }
-}
-
-
-// Login
-async function login() {
-
-    const accountNumber =
-        document.getElementById("accountNumber").value;
-
-    const response = await fetch("/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            account_number: accountNumber
-        })
-    });
-
-    const data = await response.json();
-
-    if (data.error) {
-        document.getElementById("loginResult").innerText =
-            data.error;
+function showDeposit() {
+    if (!loggedInAccount) {
+        showLogin();
+        setMessage("loginResult", "Please log in first.");
         return;
     }
 
-    loggedAccount = data.account_number;
-
-    document.getElementById("loginSection").style.display = "none";
-    document.getElementById("accountSection").style.display = "block";
-
-    document.getElementById("welcome").innerText =
-        `Welcome, ${data.name}`;
-
-    document.getElementById("loggedAccount").innerText =
-        data.account_number;
-
-    document.getElementById("currentBalance").innerText =
-        data.balance;
-}
-
-
-// Show Deposit
-function showDeposit() {
-
+    hideOperations();
     document.getElementById("depositSection").style.display = "block";
-    document.getElementById("withdrawSection").style.display = "none";
 }
 
-
-// Deposit Money
-async function depositMoney() {
-
-    const amount =
-        document.getElementById("depositAmount").value;
-
-    const response = await fetch("/deposit", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            account_number: loggedAccount,
-            amount: amount
-        })
-    });
-
-    const data = await response.json();
-
-    document.getElementById("depositResult").innerText =
-        data.message || data.error;
-
-    if (data.balance !== undefined) {
-        document.getElementById("currentBalance").innerText =
-            data.balance;
-    }
-}
-
-
-// Show Withdraw
 function showWithdraw() {
+    if (!loggedInAccount) {
+        showLogin();
+        setMessage("loginResult", "Please log in first.");
+        return;
+    }
 
+    hideOperations();
     document.getElementById("withdrawSection").style.display = "block";
-    document.getElementById("depositSection").style.display = "none";
 }
 
-
-// Withdraw Money
-async function withdrawMoney() {
-
-    const amount =
-        document.getElementById("withdrawAmount").value;
-
-    const response = await fetch("/withdraw", {
-        method: "POST",
+async function apiRequest(path, options = {}) {
+    const response = await fetch(`${API}${path}`, {
+        ...options,
         headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            account_number: loggedAccount,
-            amount: amount
-        })
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+        }
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
 
-    document.getElementById("withdrawResult").innerText =
-        data.message || data.error;
+    if (!response.ok) {
+        throw new Error(data.error || "The request failed.");
+    }
 
-    if (data.balance !== undefined) {
-        document.getElementById("currentBalance").innerText =
-            data.balance;
+    return data;
+}
+
+function updateAccountUI(data) {
+    loggedInAccount = String(data.accountNumber);
+
+    const welcome = document.getElementById("welcome");
+    const accountNumber = document.getElementById("loggedAccount");
+    const balance = document.getElementById("currentBalance");
+    const dashboardBalance = document.getElementById("dashboardBalance");
+
+    if (welcome) welcome.textContent = `Welcome, ${data.name}!`;
+    if (accountNumber) accountNumber.textContent = loggedInAccount;
+
+    if (balance) {
+        balance.textContent = Number(data.balance).toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    if (dashboardBalance) {
+        dashboardBalance.textContent = Number(data.balance).toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    showSection("accountSection");
+}
+
+async function createAccount() {
+    const name = document.getElementById("name").value.trim();
+    const accountType = document.getElementById("accountType").value;
+    const initialBalance = document.getElementById("initialBalance").value;
+
+    if (!name) {
+        setMessage("createResult", "Please enter your name.");
+        return;
+    }
+
+    if (initialBalance.trim() === "" ||
+        !Number.isFinite(Number(initialBalance)) ||
+        Number(initialBalance) < 0) {
+        setMessage("createResult", "Enter a valid initial balance.");
+        return;
+    }
+
+    try {
+        const data = await apiRequest("/accounts", {
+            method: "POST",
+            body: JSON.stringify({ name, accountType, initialBalance })
+        });
+
+        setMessage(
+            "createResult",
+            `Account created! Your account number is ${data.accountNumber}. Please save it and log in.`,
+            true
+        );
+
+        document.getElementById("accountNumber").value = data.accountNumber;
+        document.getElementById("name").value = "";
+        document.getElementById("initialBalance").value = "";
+    } catch (error) {
+        setMessage("createResult", error.message);
     }
 }
 
+async function login() {
+    const accountNumber =
+        document.getElementById("accountNumber").value.trim();
 
-// Check Balance
+    if (!accountNumber) {
+        setMessage("loginResult", "Please enter your account number.");
+        return;
+    }
+
+    try {
+        const data = await apiRequest("/login", {
+            method: "POST",
+            body: JSON.stringify({ accountNumber })
+        });
+
+        updateAccountUI(data);
+        clearMessages();
+    } catch (error) {
+        setMessage("loginResult", error.message);
+    }
+}
+
+async function refreshAccount() {
+    if (!loggedInAccount) return;
+
+    const data = await apiRequest(
+        `/accounts/${encodeURIComponent(loggedInAccount)}`
+    );
+
+    updateAccountUI(data);
+}
+
+async function depositMoney() {
+    if (!loggedInAccount) {
+        showLogin();
+        return;
+    }
+
+    const input = document.getElementById("depositAmount");
+    const amount = Number(input.value);
+
+    if (input.value.trim() === "" ||
+        !Number.isFinite(amount) || amount <= 0) {
+        setMessage("depositResult", "Enter an amount greater than zero.");
+        return;
+    }
+
+    try {
+        const data = await apiRequest(
+            `/accounts/${encodeURIComponent(loggedInAccount)}/deposit`,
+            {
+                method: "POST",
+                body: JSON.stringify({ amount })
+            }
+        );
+
+        setMessage("depositResult", data.message, true);
+        input.value = "";
+        await refreshAccount();
+    } catch (error) {
+        setMessage("depositResult", error.message);
+    }
+}
+
+async function withdrawMoney() {
+    if (!loggedInAccount) {
+        showLogin();
+        return;
+    }
+
+    const input = document.getElementById("withdrawAmount");
+    const amount = Number(input.value);
+
+    if (input.value.trim() === "" ||
+        !Number.isFinite(amount) || amount <= 0) {
+        setMessage("withdrawResult", "Enter an amount greater than zero.");
+        return;
+    }
+
+    try {
+        const data = await apiRequest(
+            `/accounts/${encodeURIComponent(loggedInAccount)}/withdraw`,
+            {
+                method: "POST",
+                body: JSON.stringify({ amount })
+            }
+        );
+
+        setMessage("withdrawResult", data.message, true);
+        input.value = "";
+        await refreshAccount();
+    } catch (error) {
+        setMessage("withdrawResult", error.message);
+    }
+}
+
 async function checkBalance() {
+    if (!loggedInAccount) {
+        showLogin();
+        setMessage("loginResult", "Please log in first.");
+        return;
+    }
 
-    const response =
-        await fetch(`/balance/${loggedAccount}`);
-
-    const data = await response.json();
-
-    if (data.balance !== undefined) {
-
-        document.getElementById("currentBalance").innerText =
-            data.balance;
-
-        document.getElementById("operationResult").innerText =
-            `Current balance: ₹${data.balance}`;
+    try {
+        await refreshAccount();
+        setMessage(
+            "operationResult",
+            "Your balance has been updated.",
+            true
+        );
+    } catch (error) {
+        setMessage("operationResult", error.message);
     }
 }
 
-
-// Calculate Interest
 async function calculateInterest() {
+    if (!loggedInAccount) {
+        showLogin();
+        setMessage("loginResult", "Please log in first.");
+        return;
+    }
 
-    const response =
-        await fetch(`/interest/${loggedAccount}`);
+    try {
+        const data = await apiRequest(
+            `/accounts/${encodeURIComponent(loggedInAccount)}/interest`
+        );
 
-    const data = await response.json();
+        await refreshAccount();
 
-    document.getElementById("operationResult").innerText =
-        data.message
-        ? `Interest: ₹${data.interest}`
-        : data.error;
+        setMessage(
+            "operationResult",
+            `Interest added: ₹${Number(data.interestAdded).toFixed(2)}. Updated balance: ₹${Number(data.balance).toFixed(2)}.`,
+            true
+        );
+    } catch (error) {
+        setMessage("operationResult", error.message);
+    }
 }
 
-
-// Logout
 function logout() {
-
-    loggedAccount = null;
-
-    document.getElementById("accountSection").style.display = "none";
-
-    document.getElementById("depositSection").style.display = "none";
-    document.getElementById("withdrawSection").style.display = "none";
-
-    document.getElementById("mainMenu").style.display = "block";
+    loggedInAccount = null;
+    clearMessages();
+    showSection("mainMenu");
 }
 
-
-// Exit
 function exitApp() {
-
-    document.body.innerHTML = `
-        <div class="container">
-            <h1>Thank you for using our Bank!</h1>
-            <p>You have exited the application.</p>
-        </div>
-    `;
+    logout();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    showSection("mainMenu");
+});

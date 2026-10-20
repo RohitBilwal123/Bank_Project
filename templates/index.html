@@ -1,130 +1,311 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Management System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-<div class="container">
-
-    <h1>🏦 Bank Management System</h1>
-
-    <!-- MAIN MENU -->
-    <div id="mainMenu">
-        <button onclick="showCreate()">1. Create Account</button>
-        <button onclick="showLogin()">2. Login</button>
-        <button onclick="exitApp()">3. Exit</button>
+<header class="topbar">
+    <div class="brand">
+        <span class="brand-icon">🏦</span>
+        <span>Bank Management System</span>
     </div>
-
-
-    <!-- CREATE ACCOUNT -->
-    <div id="createSection" style="display:none;">
-
-        <h2>Create Account</h2>
-
-        <input type="text" id="name" placeholder="Enter your name">
-
-        <select id="accountType">
-            <option value="savings">Savings Account</option>
-            <option value="current">Current Account</option>
-        </select>
-
-        <input type="number" id="initialBalance"
-               placeholder="Enter initial balance">
-
-        <button onclick="createAccount()">Create Account</button>
-
-        <p id="createResult"></p>
-
-        <button onclick="goHome()">Back</button>
-
+    <div class="header-user">
+        <span class="notification">🔔</span>
+        <span class="avatar">👤</span>
+        <span>My Banking Portal</span>
     </div>
+</header>
 
+<div class="app-layout">
 
-    <!-- LOGIN -->
-    <div id="loginSection" style="display:none;">
+    <aside class="sidebar">
+        <p class="nav-heading">MAIN MENU</p>
 
-        <h2>Login</h2>
+        <button class="nav-button active" onclick="goHome()">
+            <span>⌂</span> Dashboard
+        </button>
+        <button class="nav-button" onclick="showCreate()">
+            <span>▣</span> Create Account
+        </button>
+        <button class="nav-button" onclick="showLogin()">
+            <span>♙</span> Login
+        </button>
+        <button class="nav-button" onclick="showDeposit()">
+            <span>↓</span> Deposit Money
+        </button>
+        <button class="nav-button" onclick="showWithdraw()">
+            <span>↑</span> Withdraw Money
+        </button>
+        <button class="nav-button" onclick="checkBalance()">
+            <span>⇄</span> Check Balance
+        </button>
+        <button class="nav-button" onclick="calculateInterest()">
+            <span>％</span> Calculate Interest
+        </button>
 
-        <input type="number" id="accountNumber"
-               placeholder="Enter account number">
-
-        <button onclick="login()">Login</button>
-
-        <p id="loginResult"></p>
-
-        <button onclick="goHome()">Back</button>
-
-    </div>
-
-
-    <!-- ACCOUNT MENU -->
-    <div id="accountSection" style="display:none;">
-
-        <h2 id="welcome"></h2>
-
-        <p>
-            Account Number:
-            <strong id="loggedAccount"></strong>
-        </p>
-
-        <p>
-            Balance:
-            ₹<strong id="currentBalance">0</strong>
-        </p>
-
-        <hr>
-
-        <button onclick="showDeposit()">1. Deposit</button>
-        <button onclick="showWithdraw()">2. Withdraw</button>
-        <button onclick="checkBalance()">3. Check Balance</button>
-        <button onclick="calculateInterest()">4. Calculate Interest</button>
-        <button onclick="logout()">5. Logout</button>
-
-
-        <!-- DEPOSIT -->
-        <div id="depositSection" style="display:none;">
-
-            <h3>Deposit Money</h3>
-
-            <input type="number"
-                   id="depositAmount"
-                   placeholder="Enter amount">
-
-            <button onclick="depositMoney()">Deposit</button>
-
-            <p id="depositResult"></p>
-
+        <div class="sidebar-footer">
+            <span>🔒</span>
+            <div>
+                <strong>Secure Banking</strong>
+                <small>Manage your money easily</small>
+            </div>
         </div>
+    </aside>
 
+    <main class="main-content">
 
-        <!-- WITHDRAW -->
-        <div id="withdrawSection" style="display:none;">
+        <section class="welcome-banner">
+            <div>
+                <p class="eyebrow">YOUR PERSONAL BANKING SPACE</p>
+                <h1>Welcome to Your Bank!</h1>
+                <p>Manage your account, make transactions, and keep track
+                   of your balance in one place.</p>
+            </div>
+            <div class="welcome-art">🏛️</div>
+        </section>
 
-            <h3>Withdraw Money</h3>
+        <!-- DASHBOARD / MAIN MENU -->
+        <section id="mainMenu">
+            <div class="section-heading">
+                <div>
+                    <h2>Overview</h2>
+                    <p>Get started with your banking activities.</p>
+                </div>
+                <span class="status-badge">● Portal Ready</span>
+            </div>
 
-            <input type="number"
-                   id="withdrawAmount"
-                   placeholder="Enter amount">
+            <div class="summary-grid">
+                <article class="summary-card balance-card">
+                    <div class="summary-icon green">₹</div>
+                    <div>
+                        <p>Account Balance</p>
+                        <h2>₹ <span id="dashboardBalance">0.00</span></h2>
+                        <small>Available balance after login</small>
+                    </div>
+                </article>
 
-            <button onclick="withdrawMoney()">Withdraw</button>
+                <article class="summary-card">
+                    <div class="summary-icon blue">▣</div>
+                    <div>
+                        <p>Account Services</p>
+                        <h2>Banking</h2>
+                        <small>Manage your personal account</small>
+                    </div>
+                </article>
 
-            <p id="withdrawResult"></p>
+                <article class="summary-card">
+                    <div class="summary-icon purple">↔</div>
+                    <div>
+                        <p>Transactions</p>
+                        <h2>Quick Access</h2>
+                        <small>Deposit and withdraw money</small>
+                    </div>
+                </article>
+            </div>
 
-        </div>
+            <div class="section-heading">
+                <div>
+                    <h2>Quick Actions</h2>
+                    <p>Choose an operation to continue.</p>
+                </div>
+            </div>
 
+            <div class="action-grid">
+                <button class="action-card deposit-action"
+                        onclick="showDeposit()">
+                    <span class="action-icon">↓</span>
+                    <strong>Deposit Money</strong>
+                    <small>Add money to your account</small>
+                </button>
 
-        <p id="operationResult"></p>
+                <button class="action-card withdraw-action"
+                        onclick="showWithdraw()">
+                    <span class="action-icon">↑</span>
+                    <strong>Withdraw Money</strong>
+                    <small>Withdraw from your account</small>
+                </button>
 
-    </div>
+                <button class="action-card account-action"
+                        onclick="showCreate()">
+                    <span class="action-icon">＋</span>
+                    <strong>Create Account</strong>
+                    <small>Start your banking journey</small>
+                </button>
 
+                <button class="action-card login-action"
+                        onclick="showLogin()">
+                    <span class="action-icon">⇥</span>
+                    <strong>Login</strong>
+                    <small>Access your bank account</small>
+                </button>
+            </div>
+
+            <div class="info-panel">
+                <div class="panel-icon">🛡️</div>
+                <div>
+                    <h3>Banking made simple</h3>
+                    <p>Create an account or log in to access your account
+                       balance and banking operations.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CREATE ACCOUNT -->
+        <section id="createSection" class="form-panel" style="display:none;">
+            <div class="panel-title">
+                <span class="large-icon green">＋</span>
+                <div>
+                    <h2>Create Account</h2>
+                    <p>Enter your details to open a bank account.</p>
+                </div>
+            </div>
+
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Enter your full name">
+
+            <label for="accountType">Account Type</label>
+            <select id="accountType">
+                <option value="savings">Savings Account</option>
+                <option value="current">Current Account</option>
+            </select>
+
+            <label for="initialBalance">Initial Deposit (₹)</label>
+            <input type="number" id="initialBalance"
+                   placeholder="Enter initial balance" min="0" step="0.01">
+
+            <button class="primary-button" onclick="createAccount()">
+                Create Account
+            </button>
+            <p id="createResult" class="result-message"></p>
+            <button class="secondary-button" onclick="goHome()">Back to Dashboard</button>
+        </section>
+
+        <!-- LOGIN -->
+        <section id="loginSection" class="form-panel" style="display:none;">
+            <div class="panel-title">
+                <span class="large-icon blue">♙</span>
+                <div>
+                    <h2>Login to Your Account</h2>
+                    <p>Enter your account number to continue.</p>
+                </div>
+            </div>
+
+            <label for="accountNumber">Account Number</label>
+            <input type="number" id="accountNumber"
+                   placeholder="Enter your account number">
+
+            <button class="primary-button" onclick="login()">Login</button>
+            <p id="loginResult" class="result-message"></p>
+            <button class="secondary-button" onclick="goHome()">Back to Dashboard</button>
+        </section>
+
+        <!-- ACCOUNT DASHBOARD -->
+        <section id="accountSection" style="display:none;">
+
+            <div class="section-heading">
+                <div>
+                    <h2 id="welcome">Welcome!</h2>
+                    <p>Your account overview and banking services.</p>
+                </div>
+                <span class="status-badge">● Account Access</span>
+            </div>
+
+            <div class="account-overview">
+                <div class="account-number-card">
+                    <p>ACCOUNT NUMBER</p>
+                    <h3 id="loggedAccount">—</h3>
+                    <span>Bank Management System</span>
+                </div>
+
+                <div class="account-balance-card">
+                    <p>AVAILABLE BALANCE</p>
+                    <h2>₹ <span id="currentBalance">0</span></h2>
+                    <span>Current account balance</span>
+                </div>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h2>Banking Operations</h2>
+                    <p>Choose an operation for your account.</p>
+                </div>
+            </div>
+
+            <div class="action-grid">
+                <button class="action-card deposit-action"
+                        onclick="showDeposit()">
+                    <span class="action-icon">↓</span>
+                    <strong>Deposit Money</strong>
+                    <small>Add funds to your account</small>
+                </button>
+
+                <button class="action-card withdraw-action"
+                        onclick="showWithdraw()">
+                    <span class="action-icon">↑</span>
+                    <strong>Withdraw Money</strong>
+                    <small>Take money from your account</small>
+                </button>
+
+                <button class="action-card account-action"
+                        onclick="checkBalance()">
+                    <span class="action-icon">₹</span>
+                    <strong>Check Balance</strong>
+                    <small>View your current balance</small>
+                </button>
+
+                <button class="action-card login-action"
+                        onclick="calculateInterest()">
+                    <span class="action-icon">％</span>
+                    <strong>Calculate Interest</strong>
+                    <small>Calculate account interest</small>
+                </button>
+            </div>
+
+            <!-- DEPOSIT -->
+            <div id="depositSection" class="operation-panel" style="display:none;">
+                <h3>↓ Deposit Money</h3>
+                <label for="depositAmount">Amount (₹)</label>
+                <input type="number" id="depositAmount"
+                       placeholder="Enter deposit amount" min="0.01" step="0.01">
+                <button class="primary-button" onclick="depositMoney()">Deposit Money</button>
+                <p id="depositResult" class="result-message"></p>
+            </div>
+
+            <!-- WITHDRAW -->
+            <div id="withdrawSection" class="operation-panel" style="display:none;">
+                <h3>↑ Withdraw Money</h3>
+                <label for="withdrawAmount">Amount (₹)</label>
+                <input type="number" id="withdrawAmount"
+                       placeholder="Enter withdrawal amount" min="0.01" step="0.01">
+                <button class="primary-button" onclick="withdrawMoney()">Withdraw Money</button>
+                <p id="withdrawResult" class="result-message"></p>
+            </div>
+
+            <div id="operationResult" class="result-message"></div>
+
+            <div class="account-footer-actions">
+                <button class="secondary-button" onclick="goHome()">
+                    Dashboard
+                </button>
+                <button class="logout-button" onclick="logout()">
+                    Logout
+                </button>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <span>© 2026 Bank Management System</span>
+            <span>Built with Flask &amp; Python</span>
+        </footer>
+    </main>
 </div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
-
 </body>
 </html>

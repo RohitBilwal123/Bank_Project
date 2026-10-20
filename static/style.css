@@ -1,71 +1,661 @@
+
+:root {
+    --navy: #09294f;
+    --blue: #0875e1;
+    --light-blue: #eaf3ff;
+    --text: #132746;
+    --muted: #718096;
+    --border: #e3eaf3;
+    --background: #f3f6fb;
+}
+
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    min-height: 100vh;
-    padding: 40px 20px;
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
 }
 
-.container {
-    max-width: 700px;
-    margin: auto;
-}
-
-h1 {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #666;
-}
-
-.card {
-    background: white;
-    padding: 25px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-.card h2 {
-    margin-bottom: 20px;
-}
-
-input,
-select {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
+button, input, select {
+    font: inherit;
 }
 
 button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    background: #2563eb;
-    color: white;
-    font-size: 16px;
     cursor: pointer;
+    transition: 0.2s ease;
 }
 
-button:hover {
-    background: #1d4ed8;
+.topbar {
+    min-height: 80px;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    color: white;
+    background: linear-gradient(110deg, #07549a, #064a88);
+    box-shadow: 0 3px 12px #102c491c;
 }
 
-#createMessage,
-#loginMessage {
-    margin-top: 15px;
-    font-weight: bold;
+.brand, .header-user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.brand-icon {
+    font-size: 34px;
+}
+
+.header-user {
+    font-size: 14px;
+}
+
+.notification {
+    font-size: 22px;
+}
+
+.avatar {
+    display: grid;
+    place-items: center;
+    width: 39px;
+    height: 39px;
+    border-radius: 50%;
+    background: white;
+    color: var(--blue);
+    font-size: 23px;
+}
+
+.app-layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    min-height: calc(100vh - 80px);
+}
+
+.sidebar {
+    padding: 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: white;
+    background: linear-gradient(180deg, #0b2c53, #082342);
+}
+
+.nav-heading {
+    padding: 0 15px;
+    margin: 0 0 10px;
+    color: #a9bfd9;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+}
+
+.nav-button {
+    width: 100%;
+    padding: 15px 14px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: #e7effa;
+    text-align: left;
+    font-size: 14px;
+}
+
+.nav-button span {
+    width: 24px;
+    text-align: center;
+    font-size: 21px;
+}
+
+.nav-button:hover, .nav-button.active {
+    background: #0875e1;
+    color: white;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 16px 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border-top: 1px solid #ffffff26;
+}
+
+.sidebar-footer > span {
+    font-size: 23px;
+}
+
+.sidebar-footer strong, .sidebar-footer small {
+    display: block;
+}
+
+.sidebar-footer strong {
+    font-size: 12px;
+}
+
+.sidebar-footer small {
+    margin-top: 5px;
+    color: #c1d0e3;
+    font-size: 10px;
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 25px;
+    min-width: 0;
+}
+
+.welcome-banner {
+    min-height: 190px;
+    padding: 30px 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: linear-gradient(110deg, #e4f1ff, #c8e2ff);
+}
+
+.welcome-banner > div:first-child {
+    max-width: 620px;
+}
+
+.eyebrow {
+    color: #0875c9;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+}
+
+.welcome-banner h1 {
+    margin: 12px 0;
+    font-size: clamp(25px, 3vw, 34px);
+}
+
+.welcome-banner p:last-child {
+    margin-bottom: 0;
+    color: #425675;
+    line-height: 1.7;
+}
+
+.welcome-art {
+    font-size: clamp(65px, 8vw, 105px);
+    padding: 5px 20px;
+}
+
+.section-heading {
+    margin: 28px 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 21px;
+}
+
+.section-heading p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.status-badge {
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: #dff7e9;
+    color: #16864b;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.summary-card {
+    min-height: 130px;
+    padding: 22px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 3px 12px #163b6208;
+}
+
+.balance-card {
+    background: linear-gradient(135deg, #e1f8eb, #f4fff7);
+}
+
+.summary-icon, .large-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 43px;
+    height: 43px;
+    border-radius: 11px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.green {
+    color: #129b5c;
+    background: #e1f8eb;
+}
+
+.blue {
+    color: #0875e1;
+    background: #e4f0ff;
+}
+
+.purple {
+    color: #853fdb;
+    background: #f0e5ff;
+}
+
+.summary-card p {
+    margin: 1px 0 8px;
+    color: #65748b;
+    font-size: 12px;
+}
+
+.summary-card h2 {
+    margin: 0 0 8px;
+    font-size: clamp(16px, 1.6vw, 23px);
+    overflow-wrap: anywhere;
+}
+
+.summary-card small {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.action-card {
+    min-height: 145px;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border: 0;
+    border-radius: 11px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 10px #0b2c5315;
+}
+
+.action-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px #0b2c5325;
+}
+
+.deposit-action {
+    background: linear-gradient(135deg, #13a765, #078447);
+}
+
+.withdraw-action {
+    background: linear-gradient(135deg, #f0444b, #d92e39);
+}
+
+.account-action {
+    background: linear-gradient(135deg, #1682ef, #075bc7);
+}
+
+.login-action {
+    background: linear-gradient(135deg, #7540b7, #522b88);
+}
+
+.action-icon {
+    font-size: 29px;
+    font-weight: 700;
+}
+
+.action-card strong {
+    font-size: 14px;
+}
+
+.action-card small {
+    font-size: 11px;
+    line-height: 1.5;
+    opacity: 0.95;
+}
+
+.info-panel {
+    margin-top: 22px;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: white;
+}
+
+.panel-icon {
+    font-size: 35px;
+}
+
+.info-panel h3 {
+    margin: 0 0 7px;
+}
+
+.info-panel p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.form-panel, .operation-panel {
+    max-width: 720px;
+    margin: 25px auto;
+    padding: 30px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: white;
+    box-shadow: 0 5px 22px #0b2c530a;
+}
+
+.panel-title {
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.panel-title h2 {
+    margin: 0 0 7px;
+}
+
+.panel-title p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.large-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 26px;
+}
+
+label {
+    display: block;
+    margin: 17px 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+input, select {
+    width: 100%;
+    min-height: 47px;
+    padding: 12px 14px;
+    border: 1px solid #d7e0eb;
+    border-radius: 8px;
+    outline: none;
+    background: #fff;
+    color: var(--text);
+}
+
+input:focus, select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px #0875e11b;
+}
+
+.primary-button, .secondary-button, .logout-button {
+    min-height: 44px;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.primary-button {
+    width: 100%;
+    margin-top: 20px;
+    border: 0;
+    background: var(--blue);
+    color: white;
+}
+
+.primary-button:hover {
+    background: #0563bd;
+}
+
+.secondary-button {
+    margin-top: 12px;
+    border: 1px solid #d4dfec;
+    background: white;
+    color: #24466d;
+}
+
+.secondary-button:hover {
+    background: #f0f6ff;
+}
+
+.result-message {
+    margin: 14px 0;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.account-overview {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.account-number-card, .account-balance-card {
+    padding: 24px;
+    border-radius: 12px;
+    color: white;
+    background: linear-gradient(130deg, #07549a, #0875e1);
+}
+
+.account-balance-card {
+    background: linear-gradient(130deg, #087f53, #13aa70);
+}
+
+.account-overview p {
+    margin: 0 0 12px;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.account-overview h2, .account-overview h3 {
+    margin: 0 0 14px;
+    overflow-wrap: anywhere;
+}
+
+.account-overview span {
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+.operation-panel {
+    margin: 22px 0;
+}
+
+.operation-panel h3 {
+    margin-top: 0;
+}
+
+.account-footer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.logout-button {
+    margin-top: 12px;
+    border: 0;
+    background: #fee8e8;
+    color: #c62828;
+}
+
+.page-footer {
+    margin-top: 32px;
+    padding: 18px 0 5px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* Responsive layout */
+@media (max-width: 1100px) {
+    .app-layout {
+        grid-template-columns: 200px minmax(0, 1fr);
+    }
+
+    .main-content {
+        padding: 18px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .topbar {
+        padding: 14px;
+    }
+
+    .brand {
+        font-size: 17px;
+    }
+
+    .brand-icon {
+        font-size: 27px;
+    }
+
+    .header-user {
+        gap: 7px;
+        font-size: 11px;
+    }
+
+    .notification {
+        display: none;
+    }
+
+    .app-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        padding: 10px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .nav-heading, .sidebar-footer {
+        display: none;
+    }
+
+    .nav-button {
+        padding: 11px 8px;
+        gap: 7px;
+        font-size: 12px;
+    }
+
+    .nav-button span {
+        width: 19px;
+        font-size: 17px;
+    }
+
+    .main-content {
+        padding: 13px;
+    }
+
+    .welcome-banner {
+        min-height: 165px;
+        padding: 20px;
+    }
+
+    .welcome-art {
+        display: none;
+    }
+
+    .welcome-banner h1 {
+        font-size: 25px;
+    }
+
+    .section-heading h2 {
+        font-size: 19px;
+    }
+
+    .action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .action-card {
+        min-height: 130px;
+        padding: 14px 8px;
+    }
+
+    .action-card strong {
+        font-size: 12px;
+    }
+
+    .action-card small {
+        font-size: 10px;
+    }
+
+    .account-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .form-panel, .operation-panel {
+        padding: 20px;
+    }
+
+    .page-footer {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 380px) {
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
 }
